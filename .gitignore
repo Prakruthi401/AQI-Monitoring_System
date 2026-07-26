@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Data files
+data/full_dataset.csv
+data/*.csv
+*.csv
+
+# Test files
+test_*.py
+*_test.py
+tests/
+.pytest_cache/
+
+# Training/evaluation files
+train_*.py
+evaluate_*.py
+data_prep.py
+
+# Unused files
+strem.py
+aqi_display.py
+
+# Models (optional - uncomment if you want to exclude trained models)
+# models/*.h5
+# models/*.pkl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
