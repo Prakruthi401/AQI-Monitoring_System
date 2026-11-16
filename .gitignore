@@ -64,3 +64,10 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
+
+.venv/
+.streamlit/secrets.toml
+.env
+
+# Runtime cache, regenerated from the selected data path.
+bangalore_aqi_cache.json

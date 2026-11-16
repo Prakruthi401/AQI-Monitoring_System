@@ -14,15 +14,6 @@ import json
 import glob
 import joblib
 
-# Optional TensorFlow import (only for AI features)
-try:
-    import tensorflow as tf
-    from tensorflow.keras.models import load_model
-    TENSORFLOW_AVAILABLE = True
-except ImportError:
-    TENSORFLOW_AVAILABLE = False
-    print("TensorFlow not available - AI features will be disabled")
-
 from openaq_fetcher import OpenAQFetcher
 from location_search import LocationSearch
 from aqi_helpers import calculate_aqi, get_aqi_category, get_aqi_color_gradient, generate_calculated_data, format_timestamp, calculate_trend, get_health_recommendations
@@ -757,6 +748,11 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+st.markdown("""<style>
+[data-testid="stButton"] button {padding: .65rem .3rem !important; font-size: 14px !important;}
+[data-testid="stButton"] button p {white-space: nowrap !important; word-break: normal !important; font-size: 14px !important;}
+</style>""", unsafe_allow_html=True)
+
 # Initialize session state
 if 'selected_page' not in st.session_state:
     st.session_state.selected_page = 'Dashboard'
@@ -768,9 +764,10 @@ if 'openaq_api_key' not in st.session_state:
     st.session_state.openaq_api_key = ''
 
 # API Key Input in Sidebar
+st.warning("Learning demo: charts, history, fallback AQI values, and alert cards can use simulated data. Do not use this app for health or outdoor-activity decisions. OpenAQ integration is experimental and not verified here.")
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 🔑 API Configuration")
-st.sidebar.markdown("Enter your OpenAQ API key to access real-time data:")
+st.sidebar.markdown("Enter your OpenAQ API key to access OpenAQ data:")
 st.sidebar.markdown("[Get your free API key here](https://openaq.org/#/signup)", unsafe_allow_html=True)
 api_key_input = st.sidebar.text_input(
     "OpenAQ API Key",
@@ -790,9 +787,11 @@ if api_key_input != st.session_state.openaq_api_key:
         openaq_fetcher = OpenAQFetcher()
         st.sidebar.info("Using default/mock data")
 
+openaq_fetcher = OpenAQFetcher(api_key=st.session_state.openaq_api_key or None)
+
 # Show API key status
 if st.session_state.openaq_api_key:
-    st.sidebar.markdown(f"**Status:** 🔗 Connected to OpenAQ API")
+    st.sidebar.markdown(f"**Status:** 🔗 API key entered (connection not verified)")
 else:
     st.sidebar.markdown("**Status:** ⚠️ Using mock data")
     st.sidebar.markdown("*Get your API key at [openaq.org](https://openaq.org/#/signup)*")
@@ -873,10 +872,10 @@ st.markdown("""
             <div style="display: flex; gap: 1rem; align-items: center;">
                 <div style="color: #a0a0a0; font-size: 14px; font-weight: 500;">
                     <span class="status-indicator status-good"></span>
-                    System Active
+                    Demo Interface
                 </div>
                 <div style="color: #707070; font-size: 13px;">
-                    Last updated: """ + datetime.now().strftime('%H:%M') + """
+                    Rendered: """ + datetime.now().strftime('%H:%M') + """
                 </div>
             </div>
         </div>
@@ -916,7 +915,7 @@ if st.session_state.selected_page == 'Dashboard':
     st.markdown('''
     <div class="hero-section">
         <div class="hero-title">Air Quality Monitor</div>
-        <div class="hero-subtitle">Real-time air quality monitoring across Bengaluru - Updated every hour</div>
+        <div class="hero-subtitle">Demo air quality monitoring across Bengaluru - Simulated data supported</div>
     ''', unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -948,9 +947,9 @@ if st.session_state.selected_page == 'Dashboard':
             
             st.markdown(f"""
             <div style="background: {gradient}; padding: 15px; border-radius: 10px; margin: 10px 0; text-align: center;">
-                <h2 style="margin: 0; color: white;">Real-time AQI for {st.session_state.selected_city}: {current_aqi}</h2>
+                <h2 style="margin: 0; color: white;">Demo AQI for {st.session_state.selected_city}: {current_aqi}</h2>
                 <p style="margin: 5px 0; color: white;">Status: {status}</p>
-                <p style="margin: 0; color: white; font-size: 0.8em;">Source: {data_source} | Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+                <p style="margin: 0; color: white; font-size: 0.8em;">Source: {data_source} | Rendered: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -959,13 +958,13 @@ if st.session_state.selected_page == 'Dashboard':
             data_source = "Mock Data"
             
             if not st.session_state.openaq_api_key:
-                st.warning("🔑 Enter your OpenAQ API key in the sidebar to get real-time data")
+                st.warning("🔑 Enter your OpenAQ API key in the sidebar to get OpenAQ data")
             
             st.markdown(f"""
             <div style="background: {gradient}; padding: 15px; border-radius: 10px; margin: 10px 0; text-align: center;">
-                <h2 style="margin: 0; color: white;">Estimated AQI for {st.session_state.selected_city}: {current_aqi}</h2>
+                <h2 style="margin: 0; color: white;">Simulated AQI for {st.session_state.selected_city}: {current_aqi}</h2>
                 <p style="margin: 5px 0; color: white;">Status: {status}</p>
-                <p style="margin: 0; color: white; font-size: 0.8em;">Source: {data_source} | Based on nearest available data</p>
+                <p style="margin: 0; color: white; font-size: 0.8em;">Source: {data_source} | Randomly generated demonstration value</p>
             </div>
             """, unsafe_allow_html=True)
     except Exception as e:
@@ -979,7 +978,7 @@ if st.session_state.selected_page == 'Dashboard':
     
     st.markdown('''
     <div class="card">
-        <div class="card-title">Current Air Quality Metrics</div>
+        <div class="card-title">Demonstration Air Quality Metrics</div>
     ''', unsafe_allow_html=True)
 
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -1037,7 +1036,7 @@ if st.session_state.selected_page == 'Dashboard':
 
     st.markdown('''
     <div class="card">
-        <div class="card-title">Real-time Air Quality Map</div>
+        <div class="card-title">Demo Air Quality Map</div>
         <p style="color: #888888; margin-bottom: 1.5rem;">Interactive map showing AQI levels across Bangalore monitoring stations</p>
     ''', unsafe_allow_html=True)
 
@@ -1212,7 +1211,7 @@ if st.session_state.selected_page == 'Dashboard':
 elif st.session_state.selected_page == 'Map':
     st.markdown('''
     <div class="card">
-        <div class="card-title">Real-time Air Quality Map</div>
+        <div class="card-title">Demo Air Quality Map</div>
         <p style="color: #888888; margin-bottom: 1.5rem;">Interactive map showing AQI levels across Bangalore monitoring stations</p>
     ''', unsafe_allow_html=True)
 
@@ -1531,8 +1530,9 @@ elif st.session_state.selected_page == 'Forecast':
         models_available = all(os.path.exists(f) for f in model_files)
 
         if models_available and PREDICTOR_AVAILABLE and predictor.models_loaded:
+            st.info('Demonstration projection: applies a saved ensemble trend with hand-written time-of-day adjustments. Inputs may be simulated or cached. This is not a validated forecast.')
             st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.markdown('<div class="card-title">🤖 AI-Powered AQI Forecast</div>', unsafe_allow_html=True)
+            st.markdown('<div class="card-title">Ensemble-guided demonstration projection</div>', unsafe_allow_html=True)
             
             # Station selection dropdown
             trained_stations = [
@@ -1646,9 +1646,9 @@ elif st.session_state.selected_page == 'Forecast':
                         # Display current AQI
                         
                         col1, col2, col3 = st.columns(3)
-                        col1.metric("Current AQI", f"{current_aqi}", delta=category)
-                        col2.metric("1-Hour Forecast", f"{predictions[1]:.1f}")
-                        col3.metric("6-Hour Forecast", f"{predictions[6]:.1f}")
+                        col1.metric("Input AQI (may be simulated)", f"{current_aqi}", delta=category)
+                        col2.metric("1-Hour Demo Projection", f"{predictions[1]:.1f}")
+                        col3.metric("6-Hour Demo Projection", f"{predictions[6]:.1f}")
                         
                         # Create prediction chart
                         prediction_times = [pd.Timestamp.now() + pd.Timedelta(hours=h) for h in sorted(predictions.keys())]
@@ -1661,7 +1661,7 @@ elif st.session_state.selected_page == 'Forecast':
                             x=[pd.Timestamp.now()],
                             y=[current_aqi],
                             mode='markers',
-                            name='Current AQI',
+                            name='Input AQI (may be simulated)',
                             marker=dict(size=15, color=color, line=dict(color='white', width=2))
                         ))
                         
@@ -1697,13 +1697,13 @@ elif st.session_state.selected_page == 'Forecast':
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.warning("AI models not found. Using fallback predictions.")
-            st.info("To enable AI forecasting, run: python train_models.py")
+            st.info("Model artifacts are included in models/. The original training pipeline is not included, and the saved metrics have not been independently reproduced.")
 
 elif st.session_state.selected_page == 'History':
     st.markdown(f'''
     <div class="hero-section">
-        <div class="hero-title">Historical Data</div>
-        <div class="hero-subtitle">Historical air quality trends for {st.session_state.selected_city}</div>
+        <div class="hero-title">Simulated Historical Data</div>
+        <div class="hero-subtitle">Generated demonstration trends for {st.session_state.selected_city}</div>
     </div>
     ''', unsafe_allow_html=True)
 
@@ -1779,8 +1779,8 @@ elif st.session_state.selected_page == 'History':
 elif st.session_state.selected_page == 'Alerts':
     st.markdown('''
     <div class="hero-section">
-        <div class="hero-title">Air Quality Alerts</div>
-        <div class="hero-subtitle">Real-time alerts and notifications for air quality concerns</div>
+        <div class="hero-title">Example Alert Cards</div>
+        <div class="hero-subtitle">Interface demonstration only. No background monitoring or notifications are sent.</div>
     </div>
     ''', unsafe_allow_html=True)
 
@@ -1793,7 +1793,7 @@ elif st.session_state.selected_page == 'Alerts':
     with col1:
         alert_threshold = st.selectbox('Alert when AQI exceeds', ['100', '150', '200', '250', '300'])
     with col2:
-        alert_frequency = st.selectbox('Alert Frequency', ['Real-time', 'Hourly', 'Daily', 'Weekly'])
+        alert_frequency = st.selectbox('Alert Frequency', ['Demo', 'Hourly', 'Daily', 'Weekly'])
     with col3:
         alert_types = st.multiselect('Alert Types', ['AQI Levels', 'Health Advisories', 'Weather Impact', 'Policy Changes'],
                                    default=['AQI Levels', 'Health Advisories'])
@@ -1802,7 +1802,7 @@ elif st.session_state.selected_page == 'Alerts':
 
     st.markdown('''
     <div class="card">
-        <div class="card-title">Active Alerts</div>
+        <div class="card-title">Example Alerts (not current conditions)</div>
     ''', unsafe_allow_html=True)
 
     alerts = [

@@ -9,8 +9,8 @@ class AQIPredictor:
     """Use trained ensemble models for AQI prediction"""
     
     def __init__(self):
-        self.models_dir = 'models'
-        self.data_dir = 'data'
+        self.models_dir = os.path.join(os.path.dirname(__file__), 'models')
+        self.data_dir = os.path.join(os.path.dirname(__file__), 'data')
         self.models_loaded = False
         self.load_models()
     
@@ -32,17 +32,16 @@ class AQIPredictor:
             self.elastic_net = joblib.load(f'{self.models_dir}/elastic_net.pkl')
             self.svr = joblib.load(f'{self.models_dir}/svr.pkl')
             
-            # Load LSTM model
-            from tensorflow.keras.models import load_model
-            self.lstm_model = load_model(f'{self.models_dir}/lstm_advanced_best.h5')
-            self.lstm_scaler = joblib.load(f'{self.models_dir}/lstm_scaler.pkl')
+            # LSTM is optional and is not used by the dashboard's ensemble path.
+            self.lstm_model = None
+            self.lstm_scaler = None
             
             # Load training metrics
             with open(f'{self.models_dir}/training_metrics.json', 'r') as f:
                 self.metrics = json.load(f)
             
             self.models_loaded = True
-            print(f"Models loaded successfully. Ensemble accuracy: {self.metrics['Accuracy']:.2f}%")
+            print(f"Models loaded. Recorded R2: {self.metrics.get('R²', 'unavailable')}")
             
         except Exception as e:
             print(f"Error loading models: {e}")
@@ -102,7 +101,8 @@ class AQIPredictor:
     
     def predict_lstm(self, historical_data, sequence_length=24):
         """Make prediction using LSTM model"""
-        if not self.models_loaded:
+        # Legacy artifact is not part of the supported dashboard environment.
+        if not self.models_loaded or self.lstm_model is None:
             return None
         
         try:
@@ -210,12 +210,12 @@ class AQIPredictor:
             return None
         
         return {
-            'ensemble_accuracy': self.metrics['Accuracy'],
+            'recorded_r2': self.metrics['R²'],
             'mae': self.metrics['MAE'],
             'rmse': self.metrics['RMSE'],
             'mape': self.metrics['MAPE'],
             'r2': self.metrics['R²'],
-            'models': ['Random Forest', 'Gradient Boosting', 'AdaBoost', 'Ridge', 'Elastic Net', 'SVR', 'LSTM']
+            'models': ['Random Forest', 'Gradient Boosting', 'AdaBoost', 'Ridge', 'Elastic Net', 'SVR']
         }
 
 # Global predictor instance

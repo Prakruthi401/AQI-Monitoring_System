@@ -24,6 +24,8 @@ class OpenAQFetcher:
 
     def get_locations(self, country="IN", city="Bangalore", limit=100):
         """Fetch monitoring locations for a city"""
+        if not self.api_key:
+            return []
         url = f"{self.base_url}/locations"
         params = {
             "country": country,
@@ -116,15 +118,15 @@ class OpenAQFetcher:
         if not locations:
             return {}
 
-        # Get latest measurements from all locations
-        all_measurements = []
-        for location in locations[:5]:  # Limit to first 5 locations to avoid rate limits
+        # Keep station names as mapping keys, matching dashboard/map consumers.
+        station_data = {}
+        for location in locations[:5]:
             measurements = self.get_latest_measurements(location_id=location['id'])
-            all_measurements.extend(measurements)
-            time.sleep(0.1)  # Rate limiting
-
-        # Process measurements to calculate AQI
-        return self._process_measurements_to_aqi(all_measurements)
+            processed = self._process_measurements_to_aqi(measurements)
+            if processed:
+                station_data[location.get('name', str(location['id']))] = processed
+            time.sleep(0.1)
+        return station_data
 
     def _process_measurements_to_aqi(self, measurements):
         """Process raw measurements into AQI values"""
@@ -241,6 +243,8 @@ class OpenAQFetcher:
 
     def get_locations_near_coordinates(self, lat, lon, radius=10):
         """Find OpenAQ locations near given coordinates"""
+        if not self.api_key:
+            return []
         url = f"{self.base_url}/locations"
         params = {
             "coordinates": f"{lat},{lon}",
