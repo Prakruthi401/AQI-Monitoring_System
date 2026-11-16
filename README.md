@@ -41,4 +41,4 @@ The original training pipeline, dataset provenance, and split details are not in
 - `aqi_helpers.py`, `bangalore_locations.py`, `location_search.py`: calculation and location helpers.
 - `models/`: model artifacts and recorded metrics.
 
-No verified hosted demo link is included yet. Use an official local air-quality service for health or outdoor-activity decisions.
+Live demo: https://aqi-monitoringsystem-az4jbzzqd9ngsuady96bsv.streamlit.app/ Use an official local air-quality service for health or outdoor-activity decisions.
