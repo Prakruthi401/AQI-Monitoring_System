@@ -1,5 +1,7 @@
 # Bengaluru AQI Dashboard
 
+**Live app:** https://aqi-monitoringsystem-az4jbzzqd9ngsuady96bsv.streamlit.app/
+
 A Streamlit learning project for exploring air-quality visualizations, station maps, and saved regression models. It includes generated sample values. It is not a verified source of current air quality or a health-warning service.
 
 ![AQI dashboard demo](assets/aqi-app-demo.gif)

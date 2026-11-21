@@ -67,17 +67,17 @@ def get_aqi_category(aqi):
 
 def get_aqi_color_gradient(aqi):
     if aqi <= 50:
-        return "linear-gradient(135deg, #10b981 0%, #34d399 100%)", "Good", "#10b981", "🟢"
+        return "linear-gradient(135deg, #10b981 0%, #34d399 100%)", "Good", "#10b981", ""
     elif aqi <= 100:
-        return "linear-gradient(135deg, #fbbf24 0%, #fde047 100%)", "Moderate", "#fbbf24", "🟡"
+        return "linear-gradient(135deg, #fbbf24 0%, #fde047 100%)", "Moderate", "#fbbf24", ""
     elif aqi <= 150:
-        return "linear-gradient(135deg, #f97316 0%, #fb923c 100%)", "Poor", "#f97316", "🟠"
+        return "linear-gradient(135deg, #f97316 0%, #fb923c 100%)", "Poor", "#f97316", ""
     elif aqi <= 200:
-        return "linear-gradient(135deg, #ef4444 0%, #f87171 100%)", "Unhealthy", "#ef4444", "🔴"
+        return "linear-gradient(135deg, #ef4444 0%, #f87171 100%)", "Unhealthy", "#ef4444", ""
     elif aqi <= 300:
-        return "linear-gradient(135deg, #a855f7 0%, #c084fc 100%)", "Severe", "#a855f7", "🟣"
+        return "linear-gradient(135deg, #a855f7 0%, #c084fc 100%)", "Severe", "#a855f7", ""
     else:
-        return "linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)", "Hazardous", "#7f1d1d", "⚫"
+        return "linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)", "Hazardous", "#7f1d1d", ""
 
 def generate_calculated_data():
     """Generate calculated AQI data for testing"""

@@ -35,7 +35,6 @@ aqi_fallback_service = AQIFallbackService()
 
 st.set_page_config(
     page_title="AQI Monitor - Air Quality Dashboard",
-    page_icon="🌏",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -766,7 +765,7 @@ if 'openaq_api_key' not in st.session_state:
 # API Key Input in Sidebar
 st.warning("Learning demo: charts, history, fallback AQI values, and alert cards can use simulated data. Do not use this app for health or outdoor-activity decisions. OpenAQ integration is experimental and not verified here.")
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 🔑 API Configuration")
+st.sidebar.markdown("### API Configuration")
 st.sidebar.markdown("Enter your OpenAQ API key to access OpenAQ data:")
 st.sidebar.markdown("[Get your free API key here](https://openaq.org/#/signup)", unsafe_allow_html=True)
 api_key_input = st.sidebar.text_input(
@@ -782,7 +781,7 @@ if api_key_input != st.session_state.openaq_api_key:
     # Reinitialize fetcher with new API key
     if api_key_input:
         openaq_fetcher = OpenAQFetcher(api_key=api_key_input)
-        st.sidebar.success("✅ API key updated!")
+        st.sidebar.success("API key updated!")
     else:
         openaq_fetcher = OpenAQFetcher()
         st.sidebar.info("Using default/mock data")
@@ -791,9 +790,9 @@ openaq_fetcher = OpenAQFetcher(api_key=st.session_state.openaq_api_key or None)
 
 # Show API key status
 if st.session_state.openaq_api_key:
-    st.sidebar.markdown(f"**Status:** 🔗 API key entered (connection not verified)")
+    st.sidebar.markdown(f"**Status:** API key entered (connection not verified)")
 else:
-    st.sidebar.markdown("**Status:** ⚠️ Using mock data")
+    st.sidebar.markdown("**Status:** Using mock data")
     st.sidebar.markdown("*Get your API key at [openaq.org](https://openaq.org/#/signup)*")
 
 st.sidebar.markdown("---")
@@ -866,7 +865,7 @@ st.markdown("""
     <div class="nav-container">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div class="logo-container">
-                <div class="logo-icon">🌏</div>
+                <div class="logo-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7f1d1d" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20z"/></svg></div>
                 <div class="logo-text">AQI Monitor</div>
             </div>
             <div style="display: flex; gap: 1rem; align-items: center;">
@@ -958,7 +957,7 @@ if st.session_state.selected_page == 'Dashboard':
             data_source = "Mock Data"
             
             if not st.session_state.openaq_api_key:
-                st.warning("🔑 Enter your OpenAQ API key in the sidebar to get OpenAQ data")
+                st.warning("Enter your OpenAQ API key in the sidebar to get OpenAQ data")
             
             st.markdown(f"""
             <div style="background: {gradient}; padding: 15px; border-radius: 10px; margin: 10px 0; text-align: center;">
