@@ -1367,13 +1367,13 @@ elif st.session_state.selected_page == 'News':
     st.markdown('''
     <div class="hero-section">
         <div class="hero-title">Air Quality News</div>
-        <div class="hero-subtitle">Latest updates and insights on air quality across India</div>
+        <div class="hero-subtitle">Static sample articles, not a current news feed</div>
     </div>
     ''', unsafe_allow_html=True)
 
     news_articles = [
         {
-            'badge': 'Breaking',
+            'badge': 'Sample article',
             'title': 'Delhi Air Quality Reaches Severe Levels Amid Winter Pollution',
             'date': 'November 2, 2025',
             'summary': 'Air quality in Delhi has deteriorated to severe levels as winter pollution sets in. Authorities have issued health advisories and implemented emergency measures including odd-even vehicle restrictions.'
@@ -1462,20 +1462,21 @@ elif st.session_state.selected_page == 'Forecast':
     st.markdown('''
     <div class="hero-section">
         <div class="hero-title">AQI Forecast</div>
-        <div class="hero-subtitle">Air quality forecasting using ML models</div>
+        <div class="hero-subtitle">Simulated trends and a research projection. Not a validated forecast.</div>
     </div>
     ''', unsafe_allow_html=True)
     
-    tab1, tab2 = st.tabs(["7-Day Trend Forecast", "Model Forecast"])
+    tab1, tab2 = st.tabs(["7-Day Simulated Trend", "Model Forecast"])
     
     with tab1:
+        st.info("Simulated data only: these seven AQI values are randomly generated on each rerun. They are not predictions or live readings.")
         forecast_days = 7
         forecast_dates = [(datetime.now() + timedelta(days=i)).strftime('%b %d') for i in range(forecast_days)]
         forecast_aqi = [random.randint(50, 200) for _ in range(forecast_days)]
 
         st.markdown('''
         <div class="card">
-            <div class="card-title">7-Day AQI Trend Forecast</div>
+            <div class="card-title">7-Day Simulated AQI Trend</div>
         ''', unsafe_allow_html=True)
 
         fig = go.Figure()
@@ -1484,7 +1485,7 @@ elif st.session_state.selected_page == 'Forecast':
             x=forecast_dates,
             y=forecast_aqi,
             mode='lines+markers',
-            name='Forecasted AQI',
+            name='Simulated AQI',
             line=dict(color='#DC143C', width=3),
             marker=dict(size=10, color='#DC143C', line=dict(color='white', width=2)),
             fill='tozeroy',
